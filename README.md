@@ -1,97 +1,71 @@
-This is a new [**React Native**](https://reactnative.dev) project, bootstrapped using [`@react-native-community/cli`](https://github.com/react-native-community/cli).
+Esto es un proyecto de [**React Native**](https://reactnative.dev) , usando [`@react-native-community/cli`](https://github.com/react-native-community/cli).
 
-# Getting Started
+# Configuracion inicial
 
-> **Note**: Make sure you have completed the [Set Up Your Environment](https://reactnative.dev/docs/set-up-your-environment) guide before proceeding.
+> **Note**: Seguir los pasos de la guia [ Set Up Your Environment](https://reactnative.dev/docs/set-up-your-environment) antes de proceder.
 
-## Step 1: Start Metro
+## Step 1: Instalar las dependencias
 
-First, you will need to run **Metro**, the JavaScript build tool for React Native.
+Primero, necesitamos instalar las dependencias.
 
-To start the Metro dev server, run the following command from the root of your React Native project:
+Para instalar usaremos el siguiente comando:
 
 ```sh
-# Using npm
-npm start
+# npm
+npm install
 
-# OR using Yarn
-yarn start
+# Yarn
+yarn install
 ```
 
-## Step 2: Build and run your app
+## Step 2: Ejecutar la version debug de desarrollo
 
-With Metro running, open a new terminal window/pane from the root of your React Native project, and use one of the following commands to build and run your Android or iOS app:
+Con el ambiente configurado y con las dependencias instaladas ejecutaremos el siguiente comando para ejecutarlo en android
 
 ### Android
 
 ```sh
-# Using npm
-npm run android
+# npm
+npm run android:dev
 
-# OR using Yarn
-yarn android
+# Yarn
+yarn android:dev
 ```
+> **Note**: La aplicacion no esta pensada en ejecutarse de momento en IOS.
 
-### iOS
+## Step 2: Generar Build de produccion
 
-For iOS, remember to install CocoaPods dependencies (this only needs to be run on first clone or after updating native deps).
-
-The first time you create a new project, run the Ruby bundler to install CocoaPods itself:
-
+Para generar el AAB necesitamos ejecutar el siguiente comando
 ```sh
-bundle install
+keytool -genkeypair -v -storetype PKCS12 -keystore my-upload-key.keystore -alias my-key-alias -keyalg RSA -keysize 2048 -validity 10000
 ```
-
-Then, and every time you update your native dependencies, run:
-
-```sh
-bundle exec pod install
+Nos pedira una contraseña la cual nosotros la crearemos
+### Configurando las variables de Gradle
+ 1.  Colocar el archivo  my-upload-key.keystore en android/app de los archivos del proyecto.
+ 
+ 1. Editar el archivo  android/gradle.properties, y añadir las siguientes variables al final del archivo (Reemplazando ***** con el correcto keysPassword y alias )
+ ```
+MYAPP_UPLOAD_STORE_FILE=my-upload-key.keystore
+MYAPP_UPLOAD_KEY_ALIAS=my-key-alias
+MYAPP_UPLOAD_STORE_PASSWORD=*****
+MYAPP_UPLOAD_KEY_PASSWORD=*****
 ```
-
-For more information, please visit [CocoaPods Getting Started guide](https://guides.cocoapods.org/using/getting-started.html).
-
-```sh
-# Using npm
-npm run ios
-
-# OR using Yarn
-yarn ios
+ 1. Editar el archivo android/build.gradle, y añadir la siguiente configuracion sobre la linea 95
+ ```
+release {
+             if (project.hasProperty('MYAPP_UPLOAD_STORE_FILE')) {
+                 storeFile file(MYAPP_UPLOAD_STORE_FILE)
+                 storePassword MYAPP_UPLOAD_STORE_PASSWORD
+                 keyAlias MYAPP_UPLOAD_KEY_ALIAS
+                 keyPassword MYAPP_UPLOAD_KEY_PASSWORD
+             }
+         }
 ```
-
-If everything is set up correctly, you should see your new app running in the Android Emulator, iOS Simulator, or your connected device.
-
-This is one way to run your app — you can also build it directly from Android Studio or Xcode.
-
-## Step 3: Modify your app
-
-Now that you have successfully run the app, let's make changes!
-
-Open `App.tsx` in your text editor of choice and make some changes. When you save, your app will automatically update and reflect these changes — this is powered by [Fast Refresh](https://reactnative.dev/docs/fast-refresh).
-
-When you want to forcefully reload, for example to reset the state of your app, you can perform a full reload:
-
-- **Android**: Press the <kbd>R</kbd> key twice or select **"Reload"** from the **Dev Menu**, accessed via <kbd>Ctrl</kbd> + <kbd>M</kbd> (Windows/Linux) or <kbd>Cmd ⌘</kbd> + <kbd>M</kbd> (macOS).
-- **iOS**: Press <kbd>R</kbd> in iOS Simulator.
-
-## Congratulations! :tada:
-
-You've successfully run and modified your React Native App. :partying_face:
-
-### Now what?
-
-- If you want to add this new React Native code to an existing application, check out the [Integration guide](https://reactnative.dev/docs/integration-with-existing-apps).
-- If you're curious to learn more about React Native, check out the [docs](https://reactnative.dev/docs/getting-started).
-
-# Troubleshooting
-
-If you're having issues getting the above steps to work, see the [Troubleshooting](https://reactnative.dev/docs/troubleshooting) page.
-
-# Learn More
-
-To learn more about React Native, take a look at the following resources:
-
-- [React Native Website](https://reactnative.dev) - learn more about React Native.
-- [Getting Started](https://reactnative.dev/docs/environment-setup) - an **overview** of React Native and how setup your environment.
-- [Learn the Basics](https://reactnative.dev/docs/getting-started) - a **guided tour** of the React Native **basics**.
-- [Blog](https://reactnative.dev/blog) - read the latest official React Native **Blog** posts.
-- [`@facebook/react-native`](https://github.com/facebook/react-native) - the Open Source; GitHub **repository** for React Native.
+ 1. Agregar en el mismo archivo sobre la linea 111 la configuracion:
+ ```
+ signingConfig signingConfigs.release
+```
+Una vez heecho esto ahora si podremos generar el AAB.
+```shell
+npm run android:build
+```
