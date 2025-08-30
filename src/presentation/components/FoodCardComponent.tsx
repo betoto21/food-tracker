@@ -1,7 +1,6 @@
-import React, { useState } from 'react'
-import { Card, IconButton, Text } from 'react-native-paper'
-import { globalStyles } from '../theme/theme';
-import { View } from 'react-native';
+import React, { useState } from 'react';
+import { Card, IconButton, Text, useTheme } from 'react-native-paper';
+import { StyleSheet, View } from 'react-native';
 import { Menu, MenuOptions, MenuTrigger } from 'react-native-popup-menu';
 import { FoodOptionComponent } from './FoodOptionComponent';
 import { FoodModel } from '../../domain/models/FoodModel';
@@ -13,39 +12,64 @@ interface FoodCardComponentProps {
   description: string;
   type: number;
 }
-export const FoodCardComponent = ( {id, title, description, type} : FoodCardComponentProps) => {
-  const food: FoodModel ={
+export const FoodCardComponent = ({
+  id,
+  title,
+  description,
+  type,
+}: FoodCardComponentProps) => {
+  const theme = useTheme();
+  const food: FoodModel = {
     id,
     name: title,
     description,
-    type
-  }
+    type,
+  };
   const [visible, setVisible] = useState(false);
-   return (
-     <View>
-       <Card style={globalStyles.card}>
-         <Card.Content>
-           <View style={globalStyles.headerRow}>
-             <Text variant="titleLarge" style={globalStyles.titleText}>
-               {title}
-             </Text>
-             <Menu>
-               <MenuTrigger>
-                 <IconButton icon="dots-vertical" size={20} />
-               </MenuTrigger>
-               <MenuOptions
-                 customStyles={{ optionsContainer: globalStyles.menu }}
-               >
-                 <FoodOptionComponent setVisibleEdit={setVisible}/>
-               </MenuOptions>
-             </Menu>
-           </View>
-           <Text variant="bodyMedium">{description}</Text>
-         </Card.Content>
-       </Card>
-       <FoodDialog setVisible={setVisible}  visible= {visible} isEditing={true} food={food}/>
-     </View>
-   );
-}
-
-
+  const styles = StyleSheet.create({
+    card: {
+      backgroundColor: theme.colors.primaryContainer,
+      width: '95%',
+      marginLeft: 'auto',
+      marginRight: 'auto',
+      marginTop: '5%',
+    },
+    headerRow: {
+      flexDirection: 'row',
+      justifyContent: 'space-between',
+      alignItems: 'center',
+    },
+    titleText: {},
+    menu: {
+      backgroundColor: '#F3EDF7',
+    },
+  });
+  return (
+    <View>
+      <Card style={styles.card}>
+        <Card.Content>
+          <View style={styles.headerRow}>
+            <Text variant="titleLarge" style={styles.titleText}>
+              {title}
+            </Text>
+            <Menu>
+              <MenuTrigger>
+                <IconButton icon="dots-vertical" size={20} />
+              </MenuTrigger>
+              <MenuOptions customStyles={{ optionsContainer: styles.menu }}>
+                <FoodOptionComponent setVisibleEdit={setVisible} />
+              </MenuOptions>
+            </Menu>
+          </View>
+          <Text variant="bodyMedium">{description}</Text>
+        </Card.Content>
+      </Card>
+      <FoodDialog
+        setVisible={setVisible}
+        visible={visible}
+        isEditing={true}
+        food={food}
+      />
+    </View>
+  );
+};

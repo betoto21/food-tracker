@@ -1,12 +1,13 @@
 import React from 'react'
 import { HistoryDayCardComponent } from './HistoryDayCardComponent';
 import { HistoryInfo } from '../../domain/models/HistoryInfo';
-import { ScrollView, View } from 'react-native';
+import { Dimensions, ScrollView } from 'react-native';
 
 
 export const HistoryDay = ( { breakfast, lunch, dinner} : HistoryInfo ) => {
+  const { height } = Dimensions.get('window');
   return (
-    <ScrollView style={{ maxHeight: 666 }}>
+    <ScrollView style={{ maxHeight: height * 0.680 }}>
       <HistoryDayCardComponent
         foodType={'Desayuno'}
         tittle={breakfast.name}
