@@ -1,11 +1,19 @@
 import { FoodModel } from "../models/FoodModel";
-import { getBreackfast, getDinner, getFoods, getLunch } from "../../data/api/FoodApi";
+import { addFood, getFoods } from "../../data/api/FoodApi";
 
 
-export const GetFoodsUseCase = (): FoodModel[][] => {
-    const breakfast = getBreackfast();
-    const lunch = getLunch();
-    const dinner = getDinner();
+export const GetFoodsUseCase = async (foodType: number): Promise<FoodModel[]> => {
+    let foods: FoodModel[] = [];
 
-    return [breakfast, lunch, dinner];
+    foods = await getFoods(foodType) ?? [];
+    return foods;
+
+
+}
+    
+
+
+export const AddFoodUseCase = async (food: FoodModel) => {
+    const res = await addFood(food);
+    return res;
 }

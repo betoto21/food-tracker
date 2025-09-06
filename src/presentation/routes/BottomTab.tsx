@@ -36,6 +36,7 @@ export const BottomTab = () => {
         navigationState={{ index, routes }}
         onIndexChange={setIndex}
         renderScene={renderScene}
+        style={{ flex: 1}}
       />
     </>
   );

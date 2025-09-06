@@ -2,30 +2,57 @@ import React, { useEffect, useState } from 'react'
 import { Button, Dialog, Portal, RadioButton, Text, TextInput } from 'react-native-paper'
 import { FoodModel } from '../../domain/models/FoodModel';
 import { View } from 'react-native';
+import { AddFoodUseCase } from '../../domain/use-cases/GetFoodsUseCase';
 
 interface FoodDialogProps {
     visible: boolean;
     setVisible: (visible: boolean) => void;
     isEditing: boolean;
     food? : FoodModel;
+    onSubmit: (refresh: boolean) => void;
 }
-export const FoodDialog = ({ visible, setVisible, isEditing, food }: FoodDialogProps) => {
+export const FoodDialog = ({ visible, setVisible, isEditing, food, onSubmit }: FoodDialogProps) => {
   const hideDialog = () => setVisible(false);
-  const [nombre, setNombre] = useState(isEditing ? food?.name : '');
-  const [descripcion, setDescripcion] = useState(
-    isEditing ? food?.description : '',
-  );
-  const [foodType, setFoodType] = useState(isEditing ? food?.type : 0);
+  const [id, setId] = useState(0)
+  const [nombre, setNombre] = useState('');
+  const [descripcion, setDescripcion] = useState('');
   const [checked, setChecked] = React.useState(0);
 
   useEffect(() => {
     if (isEditing && food) {
+      setId(food.id);
       setNombre(food.name);
       setDescripcion(food.description);
-      setFoodType(food.type);
       setChecked(food.type);
     }
   },[food, isEditing]);
+  const clear = () => {
+    setNombre('');
+    setDescripcion('');
+    setChecked(0);
+  }
+  const addFood = async () => {
+    const foodNew : FoodModel = {
+      id: 0,
+      name: '',
+      description: '',
+      type: 0
+    }
+    if(isEditing){
+      foodNew.id = id;
+      foodNew.name = nombre;
+      foodNew.description = descripcion;
+      foodNew.type = checked;
+    }
+
+    foodNew.name = nombre;
+    foodNew.description = descripcion;
+    foodNew.type = checked;
+    await AddFoodUseCase(foodNew);
+    hideDialog();
+    clear();
+    onSubmit(true);
+  }
 
   return (
     <>
@@ -84,7 +111,7 @@ export const FoodDialog = ({ visible, setVisible, isEditing, food }: FoodDialogP
             </View>
           </Dialog.Content>
           <Dialog.Actions>
-            <Button onPress={hideDialog}>
+            <Button onPress={addFood}>
               {isEditing ? 'Guardar' : 'Agregar'}
             </Button>
             <Button onPress={hideDialog}>
