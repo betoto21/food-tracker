@@ -4,7 +4,7 @@ import { ActivityIndicator, useTheme } from "react-native-paper";
 import { FoodModel } from "../../domain/models/FoodModel";
 import { NoFoodComponent } from "./NoFoodComponent";
 import { useCallback, useEffect, useState } from "react";
-import { GetFoodsUseCase } from "../../domain/use-cases/GetFoodsUseCase";
+import { FoodsUseCases } from "../../domain/use-cases/FoodsUseCases";
 
 interface FoodListComponentProps {
   foodType: number;
@@ -19,7 +19,7 @@ export const FoodListComponent = ({foodType, refresh, setRefresh} : FoodListComp
   const getFoods = useCallback(async () => {
     try {
       setLoading(true);
-      const foodList = await GetFoodsUseCase(foodType);
+      const foodList = await FoodsUseCases(foodType);
       setFoods(foodList);
     } catch (error) {
       console.error("Failed to fetch foods:", error);

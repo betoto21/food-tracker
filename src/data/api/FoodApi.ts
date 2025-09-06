@@ -39,3 +39,10 @@ export const updateFood = async (food: FoodModel) => {
     }
 
 }
+
+export const deleteFood = async (food: FoodModel) => {
+    const { data, error } = await supabase.from('foods').delete().eq('id', food.id);
+    if (error) {
+        return;
+    }
+}

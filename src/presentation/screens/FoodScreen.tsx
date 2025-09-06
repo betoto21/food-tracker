@@ -50,6 +50,7 @@ export const FoodScreen = () => {
       >
         <Tab.Screen name="Desayunos">
           {() => <FoodListComponent foodType={1} refresh={refreshScreen} setRefresh={setRefreshScreen}/>}
+          
         </Tab.Screen>
         <Tab.Screen name="Comidas">
           {() => <FoodListComponent foodType={2} refresh={refreshScreen} setRefresh={setRefreshScreen}/>}

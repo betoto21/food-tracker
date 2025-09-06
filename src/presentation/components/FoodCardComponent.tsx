@@ -5,6 +5,8 @@ import { Menu, MenuOptions, MenuTrigger } from 'react-native-popup-menu';
 import { FoodOptionComponent } from './FoodOptionComponent';
 import { FoodModel } from '../../domain/models/FoodModel';
 import { FoodDialog } from './FoodDialog';
+import { ConfirmDialog } from './ConfirmDialog';
+import { DeleteFoodUseCase } from '../../domain/use-cases/FoodsUseCases';
 
 interface FoodCardComponentProps {
   id: number;
@@ -27,9 +29,21 @@ export const FoodCardComponent = ({
     description,
     type,
   };
-  const [visible, setVisible] = useState(false);
+  const [visibleFoodDialog, setVisibleFoodDialog] = useState(false);
+  const [visibleConfirmDialog, setVisibleConfirmDialog] = useState(false);
+  const deleteFood = async () => {
+    const obj = {
+      id,
+      name: title,
+      description,
+      type,
+    };
+    await DeleteFoodUseCase(obj);
+    setRefresh(true);
+  };
   const styles = StyleSheet.create({
     card: {
+      flex: 1,
       backgroundColor: theme.colors.primaryContainer,
       width: '95%',
       marginLeft: 'auto',
@@ -37,6 +51,7 @@ export const FoodCardComponent = ({
       marginTop: '5%',
     },
     headerRow: {
+      flex: 1,
       flexDirection: 'row',
       justifyContent: 'space-between',
       alignItems: 'center',
@@ -59,20 +74,22 @@ export const FoodCardComponent = ({
                 <IconButton icon="dots-vertical" size={20} />
               </MenuTrigger>
               <MenuOptions customStyles={{ optionsContainer: styles.menu }}>
-                <FoodOptionComponent setVisibleEdit={setVisible} />
+                <FoodOptionComponent setVisibleEdit={setVisibleFoodDialog} setConfirmDialog={setVisibleConfirmDialog} />
               </MenuOptions>
             </Menu>
           </View>
           <Text variant="bodyMedium">{description}</Text>
         </Card.Content>
       </Card>
+  
       <FoodDialog
-        setVisible={setVisible}
-        visible={visible}
+        setVisible={setVisibleFoodDialog}
+        visible={visibleFoodDialog}
         isEditing={true}
         food={food}
         onSubmit={setRefresh}
       />
+      <ConfirmDialog setVisible={setVisibleConfirmDialog} visible={visibleConfirmDialog} onConfirm={deleteFood} />
     </View>
   );
 };

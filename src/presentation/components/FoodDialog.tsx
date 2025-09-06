@@ -2,7 +2,7 @@ import React, { useEffect, useState } from 'react'
 import { Button, Dialog, Portal, RadioButton, Text, TextInput } from 'react-native-paper'
 import { FoodModel } from '../../domain/models/FoodModel';
 import { View } from 'react-native';
-import { AddFoodUseCase, UpdateFoodUseCase } from '../../domain/use-cases/GetFoodsUseCase';
+import { AddFoodUseCase, UpdateFoodUseCase } from '../../domain/use-cases/FoodsUseCases';
 
 interface FoodDialogProps {
     visible: boolean;
