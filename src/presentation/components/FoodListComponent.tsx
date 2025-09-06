@@ -1,4 +1,4 @@
-import { FlatList, StyleSheet, View } from "react-native";
+import { FlatList, ScrollView, StyleSheet} from "react-native";
 import { FoodCardComponent } from "./FoodCardComponent";
 import { ActivityIndicator, useTheme } from "react-native-paper";
 import { FoodModel } from "../../domain/models/FoodModel";
@@ -42,7 +42,7 @@ export const FoodListComponent = ({foodType, refresh, setRefresh} : FoodListComp
     },
   })
   return (
-    <View style={{ flex: 1,  backgroundColor: theme.colors.background}}>
+    <ScrollView style={{ flex: 1,  backgroundColor: theme.colors.background}}>
       {loading ? (
         <ActivityIndicator
             animating={true}
@@ -60,6 +60,7 @@ export const FoodListComponent = ({foodType, refresh, setRefresh} : FoodListComp
                 title={item.name}
                 description={item.description}
                 type={item.type}
+                setRefresh={setRefresh}
               />
             )}
             keyExtractor={item => item.id.toString()}
@@ -71,6 +72,6 @@ export const FoodListComponent = ({foodType, refresh, setRefresh} : FoodListComp
             <NoFoodComponent />
           )
       }
-    </View>
+    </ScrollView>
   );
 };

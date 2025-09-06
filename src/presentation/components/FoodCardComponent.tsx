@@ -11,12 +11,14 @@ interface FoodCardComponentProps {
   title: string;
   description: string;
   type: number;
+  setRefresh: (refresh: boolean) => void;
 }
 export const FoodCardComponent = ({
   id,
   title,
   description,
   type,
+  setRefresh,
 }: FoodCardComponentProps) => {
   const theme = useTheme();
   const food: FoodModel = {
@@ -69,6 +71,7 @@ export const FoodCardComponent = ({
         visible={visible}
         isEditing={true}
         food={food}
+        onSubmit={setRefresh}
       />
     </View>
   );

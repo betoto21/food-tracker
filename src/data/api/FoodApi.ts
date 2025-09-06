@@ -5,12 +5,10 @@ import { FoodModel } from './../../domain/models/FoodModel';
 export const getFoods = async (foodType: number) => {
     const breakfast: FoodModel[] = []
     try{
-        const { data, error } = await supabase.from('foods').select().eq('type', foodType); 
+        const { data, error } = await supabase.from('foods').select().order('id').eq('type', foodType);  
         if (error) {
-
           return;
         }
-
         if (data && data.length > 0) {
             data.map((food: FoodModel) => {
                 breakfast.push(food)
@@ -28,7 +26,14 @@ export const addFood = async (food: FoodModel) => {
         type: food.type
     }
     const { data, error } = await supabase.from('foods').insert(obj);
-    console.log(data);
+    if (error) {
+        return;
+    }
+
+}
+export const updateFood = async (food: FoodModel) => {
+    console.log('Editing: ',food);
+    const { data, error } = await supabase.from('foods').upsert(food);
     if (error) {
         return;
     }

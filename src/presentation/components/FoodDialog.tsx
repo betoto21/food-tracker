@@ -2,7 +2,7 @@ import React, { useEffect, useState } from 'react'
 import { Button, Dialog, Portal, RadioButton, Text, TextInput } from 'react-native-paper'
 import { FoodModel } from '../../domain/models/FoodModel';
 import { View } from 'react-native';
-import { AddFoodUseCase } from '../../domain/use-cases/GetFoodsUseCase';
+import { AddFoodUseCase, UpdateFoodUseCase } from '../../domain/use-cases/GetFoodsUseCase';
 
 interface FoodDialogProps {
     visible: boolean;
@@ -43,15 +43,21 @@ export const FoodDialog = ({ visible, setVisible, isEditing, food, onSubmit }: F
       foodNew.name = nombre;
       foodNew.description = descripcion;
       foodNew.type = checked;
+      await UpdateFoodUseCase(foodNew);
+      hideDialog();
+      clear();
+      onSubmit(true);
+      return;
+    } else {
+      foodNew.name = nombre;
+      foodNew.description = descripcion;
+      foodNew.type = checked;
+      await AddFoodUseCase(foodNew);
+      hideDialog();
+      clear();
+      onSubmit(true);
+      return;
     }
-
-    foodNew.name = nombre;
-    foodNew.description = descripcion;
-    foodNew.type = checked;
-    await AddFoodUseCase(foodNew);
-    hideDialog();
-    clear();
-    onSubmit(true);
   }
 
   return (
@@ -111,7 +117,7 @@ export const FoodDialog = ({ visible, setVisible, isEditing, food, onSubmit }: F
             </View>
           </Dialog.Content>
           <Dialog.Actions>
-            <Button onPress={addFood}>
+            <Button onPress={addFood} disabled={!nombre || !descripcion}>
               {isEditing ? 'Guardar' : 'Agregar'}
             </Button>
             <Button onPress={hideDialog}>

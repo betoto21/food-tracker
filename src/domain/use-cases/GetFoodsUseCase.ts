@@ -1,5 +1,5 @@
 import { FoodModel } from "../models/FoodModel";
-import { addFood, getFoods } from "../../data/api/FoodApi";
+import { addFood, getFoods, updateFood } from "../../data/api/FoodApi";
 
 
 export const GetFoodsUseCase = async (foodType: number): Promise<FoodModel[]> => {
@@ -15,5 +15,9 @@ export const GetFoodsUseCase = async (foodType: number): Promise<FoodModel[]> =>
 
 export const AddFoodUseCase = async (food: FoodModel) => {
     const res = await addFood(food);
+    return res;
+}
+export const UpdateFoodUseCase = async (food: FoodModel) => {
+    const res = await updateFood(food);
     return res;
 }
