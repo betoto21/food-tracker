@@ -1,10 +1,15 @@
 import React from 'react'
 import { HistoryDayCardComponent } from './HistoryDayCardComponent';
-import { HistoryInfo } from '../../domain/models/HistoryInfo';
 import { Dimensions, ScrollView } from 'react-native';
+import { FoodModel } from '../../domain/models/FoodModel';
 
+interface HistoryDayProps {
+  breakfast: FoodModel;
+  lunch: FoodModel;
+  dinner: FoodModel;
+}
 
-export const HistoryDay = ( { breakfast, lunch, dinner} : HistoryInfo ) => {
+export const HistoryDay = ( { breakfast, lunch, dinner} : HistoryDayProps) => {
   const { height } = Dimensions.get('window');
   return (
     <ScrollView style={{ maxHeight: height * 0.680 }}>

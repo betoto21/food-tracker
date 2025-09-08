@@ -7,6 +7,7 @@ import { FoodModel } from '../../domain/models/FoodModel';
 import { FoodDialog } from './FoodDialog';
 import { ConfirmDialog } from './ConfirmDialog';
 import { DeleteFoodUseCase } from '../../domain/use-cases/FoodsUseCases';
+import { addHistory } from '../../domain/use-cases/HistoryUseCases';
 
 interface FoodCardComponentProps {
   id: number;
@@ -31,6 +32,7 @@ export const FoodCardComponent = ({
   };
   const [visibleFoodDialog, setVisibleFoodDialog] = useState(false);
   const [visibleConfirmDialog, setVisibleConfirmDialog] = useState(false);
+  const [visibleConfirmFood, setVisibleConfirmFood] = useState(false);
   const deleteFood = async () => {
     const obj = {
       id,
@@ -40,6 +42,15 @@ export const FoodCardComponent = ({
     };
     await DeleteFoodUseCase(obj);
     setRefresh(true);
+  };
+  const confirmFood = async () => {
+    const obj = {
+      id,
+      name: title,
+      description,
+      type,
+    };
+    await addHistory(obj);
   };
   const styles = StyleSheet.create({
     card: {
@@ -74,7 +85,7 @@ export const FoodCardComponent = ({
                 <IconButton icon="dots-vertical" size={20} />
               </MenuTrigger>
               <MenuOptions customStyles={{ optionsContainer: styles.menu }}>
-                <FoodOptionComponent setVisibleEdit={setVisibleFoodDialog} setConfirmDialog={setVisibleConfirmDialog} />
+                <FoodOptionComponent setVisibleEdit={setVisibleFoodDialog} setConfirmDialog={setVisibleConfirmDialog} onConfirmFood={setVisibleConfirmFood} />
               </MenuOptions>
             </Menu>
           </View>
@@ -89,6 +100,7 @@ export const FoodCardComponent = ({
         food={food}
         onSubmit={setRefresh}
       />
+      <ConfirmDialog setVisible={setVisibleConfirmFood} visible={visibleConfirmFood} onConfirm={confirmFood} />
       <ConfirmDialog setVisible={setVisibleConfirmDialog} visible={visibleConfirmDialog} onConfirm={deleteFood} />
     </View>
   );

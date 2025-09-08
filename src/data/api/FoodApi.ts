@@ -25,15 +25,14 @@ export const addFood = async (food: FoodModel) => {
         description: food.description,
         type: food.type
     }
-    const { data, error } = await supabase.from('foods').insert(obj);
+    const { error } = await supabase.from('foods').insert(obj);
     if (error) {
         return;
     }
 
 }
 export const updateFood = async (food: FoodModel) => {
-    console.log('Editing: ',food);
-    const { data, error } = await supabase.from('foods').upsert(food);
+    const { error } = await supabase.from('foods').upsert(food);
     if (error) {
         return;
     }
@@ -41,7 +40,7 @@ export const updateFood = async (food: FoodModel) => {
 }
 
 export const deleteFood = async (food: FoodModel) => {
-    const { data, error } = await supabase.from('foods').delete().eq('id', food.id);
+    const { error } = await supabase.from('foods').delete().eq('id', food.id);
     if (error) {
         return;
     }

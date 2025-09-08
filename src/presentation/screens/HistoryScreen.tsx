@@ -1,27 +1,67 @@
+/* eslint-disable react-hooks/exhaustive-deps */
 import { useEffect, useState } from 'react';
 import { Dimensions, StyleSheet, View } from 'react-native';
 import { DatePickerModal } from '../components/DatePicker';
 import { ActivityIndicator, Button, Text, useTheme } from 'react-native-paper';
 import { getToday } from 'react-native-modern-datepicker';
 import { HistoryDay } from '../components/HistoryDay';
-import { getHistory } from '../../data/api/HistoryApi';
 import { HistoryInfo } from '../../domain/models/HistoryInfo';
 import { NoHistoryComponent } from '../components/NoHistoryComponent';
+import { getHistoryDay } from '../../domain/use-cases/HistoryUseCases';
+import { FoodModel } from '../../domain/models/FoodModel';
 
 export const HistoryScreen = () => {
+  const emptyFood: FoodModel = {
+    id: 0,
+    name: '',
+    description: '',
+    type: 0,
+  }
   const [open, setOpen] = useState(false);
   const [date, setDate] = useState(getToday());
-  const [history, setHistory] = useState<HistoryInfo>({} as HistoryInfo);
   const [loading, setLoading] = useState(false);
+  const [results,setResults] = useState(0);
+  const [breakfast, setBreakfast] = useState<FoodModel>(emptyFood);
+  const [lunch, setLunch] = useState<FoodModel>(emptyFood);
+  const [dinner, setDinner] = useState<FoodModel>(emptyFood);
   const { width, height } = Dimensions.get('window');
+  const reset = () => {
+    setResults(0);
+    setBreakfast(emptyFood);
+    setLunch(emptyFood);
+    setDinner(emptyFood);
+  }
+  
   const theme = useTheme();
   useEffect(() => {
-    setLoading(true);
-    const getHistoryList = getHistory(date);
-    setHistory(getHistoryList);
-    setTimeout(() => {
-      setLoading(false);
-    }, 2000);
+    reset();
+    const fetchHistory = async () => {
+        reset();
+        setLoading(true);
+
+        try {
+            const historyList: HistoryInfo[] = await getHistoryDay(date);
+            setResults(historyList.length);
+            if (historyList && historyList.length > 0) {
+                historyList.forEach(item => {
+                    const foodData = item.foods; 
+                    if (item.foodType === 1) {
+                        setBreakfast(foodData);
+                    } else if (item.foodType === 2) {
+                        setLunch(foodData);
+                    } else if (item.foodType === 3) {
+                        setDinner(foodData);
+                    }
+                });
+            }
+        } catch (error) {
+            console.error("Error al obtener el historial:", error);
+            reset();
+        } finally {
+            setLoading(false);
+        }
+    };
+    fetchHistory()
   }, [date]);
   const styles = StyleSheet.create({
     dateText: {
@@ -94,12 +134,11 @@ export const HistoryScreen = () => {
           />
         ) : (
           <>
-            {history && history.breakfast && history.lunch && history.dinner ? (
+            {results > 0 ? (
               <HistoryDay
-                date={history.date}
-                breakfast={history.breakfast}
-                lunch={history.lunch}
-                dinner={history.dinner}
+                breakfast={breakfast}
+                lunch={lunch}
+                dinner={dinner}
               />
             ) : (
               <NoHistoryComponent />
