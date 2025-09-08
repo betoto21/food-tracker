@@ -25,6 +25,7 @@ export const HistoryScreen = () => {
   const [lunch, setLunch] = useState<FoodModel>(emptyFood);
   const [dinner, setDinner] = useState<FoodModel>(emptyFood);
   const { width, height } = Dimensions.get('window');
+  const [refresh, setRefresh] = useState(false);
   const reset = () => {
     setResults(0);
     setBreakfast(emptyFood);
@@ -58,11 +59,12 @@ export const HistoryScreen = () => {
             console.error("Error al obtener el historial:", error);
             reset();
         } finally {
-            setLoading(false);
+          setRefresh(false);
+          setLoading(false);
         }
     };
     fetchHistory()
-  }, [date]);
+  }, [date, refresh]);
   const styles = StyleSheet.create({
     dateText: {
       borderColor: theme.colors.primary,
@@ -139,9 +141,14 @@ export const HistoryScreen = () => {
                 breakfast={breakfast}
                 lunch={lunch}
                 dinner={dinner}
+                refresh={refresh}
+                setRefresh={setRefresh}
               />
             ) : (
-              <NoHistoryComponent />
+              <NoHistoryComponent 
+                refresh={refresh}
+                setRefresh={setRefresh}
+              />
             )}
           </>
         )}
