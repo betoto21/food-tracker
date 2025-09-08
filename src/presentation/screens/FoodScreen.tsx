@@ -22,7 +22,7 @@ export const FoodScreen = () => {
     floatinButton: {
       position: 'absolute',
       margin: 16,
-      right: 6,
+      left: 6,
       bottom: 6,
       backgroundColor: theme.colors.onPrimaryContainer,
     },
