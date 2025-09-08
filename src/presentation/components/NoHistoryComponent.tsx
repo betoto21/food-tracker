@@ -1,8 +1,12 @@
 import React from 'react'
-import { StyleSheet, View } from 'react-native'
+import { RefreshControl, ScrollView, StyleSheet, View } from 'react-native'
 import { Card, Text, useTheme } from 'react-native-paper'
 
-export const NoHistoryComponent = () => {
+interface HistoryDayProps {
+  refresh: boolean;
+  setRefresh: (refresh: boolean) => void;
+}
+export const NoHistoryComponent = ({refresh, setRefresh} : HistoryDayProps) => {
   const theme = useTheme();
     const styles = StyleSheet.create({
        cardHistory: {
@@ -21,7 +25,15 @@ export const NoHistoryComponent = () => {
       
     })
   return (
-    <View >
+    <ScrollView 
+          refreshControl={
+            <RefreshControl
+              refreshing={refresh}
+              onRefresh={() => setRefresh(true)}
+              colors={[theme.colors.primary]}
+              tintColor={theme.colors.primary}
+            />
+          }>
        <Card style={styles.cardHistory}>
          <Card.Content>
            <View style={styles.headerRow}>
@@ -31,7 +43,7 @@ export const NoHistoryComponent = () => {
            </View>
          </Card.Content>
        </Card>
-     </View>
+     </ScrollView>
   )
 }
 

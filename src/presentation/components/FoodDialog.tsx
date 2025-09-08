@@ -107,14 +107,6 @@ export const FoodDialog = ({ visible, setVisible, isEditing, food, onSubmit }: F
               />
               <Text  variant="bodyMedium">Cena</Text>
             </View>
-            <View style={{ flexDirection: 'row', alignItems: 'center' }}>
-              <RadioButton
-                value="0"
-                status={checked === 4 ? 'checked' : 'unchecked'}
-                onPress={() => setChecked(4)}
-              />
-              <Text  variant="bodyMedium">Fuera de la dieta</Text>
-            </View>
           </Dialog.Content>
           <Dialog.Actions>
             <Button onPress={addFood} disabled={!nombre || !descripcion}>

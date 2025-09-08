@@ -1,9 +1,9 @@
-import { FlatList, ScrollView, StyleSheet} from "react-native";
+import { FlatList, RefreshControl, ScrollView, StyleSheet} from "react-native";
 import { FoodCardComponent } from "./FoodCardComponent";
 import { ActivityIndicator, useTheme } from "react-native-paper";
 import { FoodModel } from "../../domain/models/FoodModel";
 import { NoFoodComponent } from "./NoFoodComponent";
-import { useCallback, useEffect, useState } from "react";
+import { useEffect, useState } from "react";
 import { FoodsUseCases } from "../../domain/use-cases/FoodsUseCases";
 
 interface FoodListComponentProps {
@@ -15,25 +15,23 @@ export const FoodListComponent = ({foodType, refresh, setRefresh} : FoodListComp
   const theme = useTheme();
   const [foods, setFoods] = useState<FoodModel[]>([]);
   const [loading, setLoading] = useState(true)
- 
-  const getFoods = useCallback(async () => {
+
+  useEffect(() => {
+    setLoading(true)
+    const fetchFoods = async () => {
     try {
-      setLoading(true);
       const foodList = await FoodsUseCases(foodType);
       setFoods(foodList);
+      setLoading(false)
     } catch (error) {
       console.error("Failed to fetch foods:", error);
     } finally {
       setLoading(false);
     }
-  }, [foodType]);
-
-  useEffect(() => {
-    setLoading(true)
-    getFoods();
-    setLoading(false)
+  }
+    fetchFoods();
     setRefresh(false);
-  }, [getFoods, refresh, setRefresh])
+  }, [foodType, refresh, setRefresh])
   const styles = StyleSheet.create({
     activityIndicator: {
       margin: 'auto',
@@ -68,6 +66,14 @@ export const FoodListComponent = ({foodType, refresh, setRefresh} : FoodListComp
               flex: 1,
               backgroundColor: theme.colors.background,
             }}
+            refreshControl={
+              <RefreshControl
+                refreshing={refresh}
+                onRefresh={() => setRefresh(true)}
+                colors={[theme.colors.primary]}
+                tintColor={theme.colors.primary}
+              />
+            }
           />) : (
             <NoFoodComponent />
           )
