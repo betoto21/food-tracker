@@ -12,6 +12,7 @@ import { MenuProvider } from 'react-native-popup-menu';
 import { NavigationContainer } from '@react-navigation/native';
 import { SafeAreaProvider } from 'react-native-safe-area-context';
 import { darkTheme, lightTheme } from './presentation/styles/theme';
+import Toast from 'react-native-toast-message';
 
 
 function App() {
@@ -25,6 +26,7 @@ function App() {
         <NavigationContainer>
           <PaperProvider theme={theme}>
             <BottomTab />
+            <Toast />
           </PaperProvider>
         </NavigationContainer>
       </MenuProvider>

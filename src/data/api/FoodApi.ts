@@ -7,7 +7,7 @@ export const getFoods = async (foodType: number) => {
     try{
         const { data, error } = await supabase.from('foods').select().order('id').eq('type', foodType);  
         if (error) {
-          return;
+        throw error;
         }
         if (data && data.length > 0) {
             data.map((food: FoodModel) => {
@@ -15,6 +15,7 @@ export const getFoods = async (foodType: number) => {
             })
         }
     }catch(e){
+        throw e;
     }
     return breakfast;
 }
@@ -27,14 +28,14 @@ export const addFood = async (food: FoodModel) => {
     }
     const { error } = await supabase.from('foods').insert(obj);
     if (error) {
-        return;
+        throw error;
     }
 
 }
 export const updateFood = async (food: FoodModel) => {
     const { error } = await supabase.from('foods').upsert(food);
     if (error) {
-        return;
+        throw error;
     }
 
 }
@@ -42,6 +43,6 @@ export const updateFood = async (food: FoodModel) => {
 export const deleteFood = async (food: FoodModel) => {
     const { error } = await supabase.from('foods').delete().eq('id', food.id);
     if (error) {
-        return;
+        throw error;
     }
 }

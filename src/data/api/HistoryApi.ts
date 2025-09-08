@@ -18,13 +18,12 @@ export const getHistory = async (date: string) => {
             .in("foodType", [1, 2, 3])
             .order("created_at", { ascending: false });
         if (error) {
-            console.error("Error fetching history:", error);
             throw error;
         }
         return (data as unknown as HistoryInfo[]) || [];
 
     } catch (e) {
-        return [];
+        throw e;
     }
 }
 
@@ -37,7 +36,7 @@ export const addNewHistory = async (food : FoodModel) => {
     }
     const { error } = await supabase.from('foodHistory').insert(obj);
     if (error) {
-        return;
+        throw error;
     }
 }
 
