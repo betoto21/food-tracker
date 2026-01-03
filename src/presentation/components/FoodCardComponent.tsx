@@ -59,7 +59,7 @@ export const FoodCardComponent = ({
       width: '95%',
       marginLeft: 'auto',
       marginRight: 'auto',
-      marginTop: '5%',
+      marginTop: 8,
     },
     headerRow: {
       flex: 1,
@@ -82,17 +82,21 @@ export const FoodCardComponent = ({
             </Text>
             <Menu>
               <MenuTrigger>
-                <IconButton icon="dots-vertical" size={20} />
+                <IconButton icon="dots-vertical" size={24} />
               </MenuTrigger>
               <MenuOptions customStyles={{ optionsContainer: styles.menu }}>
-                <FoodOptionComponent setVisibleEdit={setVisibleFoodDialog} setConfirmDialog={setVisibleConfirmDialog} onConfirmFood={setVisibleConfirmFood} />
+                <FoodOptionComponent
+                  setVisibleEdit={setVisibleFoodDialog}
+                  setConfirmDialog={setVisibleConfirmDialog}
+                  onConfirmFood={setVisibleConfirmFood}
+                />
               </MenuOptions>
             </Menu>
           </View>
           <Text variant="bodyMedium">{description}</Text>
         </Card.Content>
       </Card>
-  
+
       <FoodDialog
         setVisible={setVisibleFoodDialog}
         visible={visibleFoodDialog}
@@ -100,8 +104,16 @@ export const FoodCardComponent = ({
         food={food}
         onSubmit={setRefresh}
       />
-      <ConfirmDialog setVisible={setVisibleConfirmFood} visible={visibleConfirmFood} onConfirm={confirmFood} />
-      <ConfirmDialog setVisible={setVisibleConfirmDialog} visible={visibleConfirmDialog} onConfirm={deleteFood} />
+      <ConfirmDialog
+        setVisible={setVisibleConfirmFood}
+        visible={visibleConfirmFood}
+        onConfirm={confirmFood}
+      />
+      <ConfirmDialog
+        setVisible={setVisibleConfirmDialog}
+        visible={visibleConfirmDialog}
+        onConfirm={deleteFood}
+      />
     </View>
   );
 };
