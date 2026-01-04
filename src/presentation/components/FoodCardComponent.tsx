@@ -59,7 +59,7 @@ export const FoodCardComponent = ({
       width: '95%',
       marginLeft: 'auto',
       marginRight: 'auto',
-      marginTop: 8,
+      marginTop: 16,
     },
     headerRow: {
       flex: 1,

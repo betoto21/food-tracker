@@ -2,15 +2,12 @@ import React from 'react';
 import { HomeOptionComponent } from '../components/HomeOptionComponent';
 import { FoodScreen } from './FoodScreen';
 import { HistoryScreen } from './HistoryScreen';
+import { View } from 'react-native';
+import { useTheme } from 'react-native-paper';
 
 export const HomeScreen = () => {
+  const theme = useTheme();
   const menu = [
-    {
-      title: 'Registrar Comida',
-      description: 'Registrar la comida consumida',
-      component: FoodScreen,
-      url: 'foods',
-    },
     {
       title: 'Consultar Comidas',
       description: 'Consultar todas las comidas',
@@ -25,7 +22,7 @@ export const HomeScreen = () => {
     },
   ];
   return (
-    <>
+    <View style={{ flex: 1, backgroundColor: theme.colors.background }}>
       {menu.map(element => {
         return (
           <HomeOptionComponent
@@ -36,6 +33,6 @@ export const HomeScreen = () => {
           />
         );
       })}
-    </>
+    </View>
   );
 };

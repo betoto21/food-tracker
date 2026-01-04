@@ -21,7 +21,7 @@ export const HomeOptionComponent = (props: Props) => {
       width: '95%',
       marginLeft: 'auto',
       marginRight: 'auto',
-      marginTop: '4%',
+      marginTop: 16,
     },
   });
   const redirect = () => {

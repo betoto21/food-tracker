@@ -2,16 +2,20 @@ import React, { useState } from 'react';
 import { createMaterialTopTabNavigator } from '@react-navigation/material-top-tabs';
 import { FAB, useTheme } from 'react-native-paper';
 import { FoodDialog } from '../components/FoodDialog';
-import { StyleSheet } from 'react-native';
+import { StyleSheet, View } from 'react-native';
 import { FoodListComponent } from '../components/FoodListComponent';
 
 const Tab = createMaterialTopTabNavigator();
 
 export const FoodScreen = () => {
   const [visible, setVisible] = useState(false);
-  const [refreshScreen, setRefreshScreen] = useState(false)
+  const [refreshScreen, setRefreshScreen] = useState(false);
   const theme = useTheme();
   const styles = StyleSheet.create({
+    container: {
+      flex: 1,
+      backgroundColor: theme.colors.background,
+    },
     card: {
       backgroundColor: theme.colors.primaryContainer,
       width: 420,
@@ -33,9 +37,9 @@ export const FoodScreen = () => {
   };
 
   return (
-    <>
+    <View style={styles.container}>
       <Tab.Navigator
-      style={{ flex: 1 }}
+        style={{ flex: 1 }}
         screenOptions={{
           tabBarLabelStyle: { fontSize: 16 },
           tabBarIndicatorStyle: { backgroundColor: theme.colors.primary },
@@ -49,14 +53,31 @@ export const FoodScreen = () => {
         }}
       >
         <Tab.Screen name="Desayunos">
-          {() => <FoodListComponent foodType={1} refresh={refreshScreen} setRefresh={setRefreshScreen}/>}
-          
+          {() => (
+            <FoodListComponent
+              foodType={1}
+              refresh={refreshScreen}
+              setRefresh={setRefreshScreen}
+            />
+          )}
         </Tab.Screen>
         <Tab.Screen name="Comidas">
-          {() => <FoodListComponent foodType={2} refresh={refreshScreen} setRefresh={setRefreshScreen}/>}
+          {() => (
+            <FoodListComponent
+              foodType={2}
+              refresh={refreshScreen}
+              setRefresh={setRefreshScreen}
+            />
+          )}
         </Tab.Screen>
         <Tab.Screen name="Cenas">
-          {() => <FoodListComponent foodType={3} refresh={refreshScreen} setRefresh={setRefreshScreen}/>}
+          {() => (
+            <FoodListComponent
+              foodType={3}
+              refresh={refreshScreen}
+              setRefresh={setRefreshScreen}
+            />
+          )}
         </Tab.Screen>
       </Tab.Navigator>
       <FAB
@@ -66,7 +87,12 @@ export const FoodScreen = () => {
         onPress={showDialog}
       />
 
-      <FoodDialog setVisible={setVisible} visible={visible} isEditing={false} onSubmit={setRefreshScreen}/>
-    </>
+      <FoodDialog
+        setVisible={setVisible}
+        visible={visible}
+        isEditing={false}
+        onSubmit={setRefreshScreen}
+      />
+    </View>
   );
 };

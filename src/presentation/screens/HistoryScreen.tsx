@@ -16,11 +16,11 @@ export const HistoryScreen = () => {
     name: '',
     description: '',
     type: 0,
-  }
+  };
   const [open, setOpen] = useState(false);
   const [date, setDate] = useState(getToday());
   const [loading, setLoading] = useState(false);
-  const [results,setResults] = useState(0);
+  const [results, setResults] = useState(0);
   const [breakfast, setBreakfast] = useState<FoodModel>(emptyFood);
   const [lunch, setLunch] = useState<FoodModel>(emptyFood);
   const [dinner, setDinner] = useState<FoodModel>(emptyFood);
@@ -31,48 +31,52 @@ export const HistoryScreen = () => {
     setBreakfast(emptyFood);
     setLunch(emptyFood);
     setDinner(emptyFood);
-  }
-  
+  };
+
   const theme = useTheme();
   useEffect(() => {
     reset();
     const fetchHistory = async () => {
-        reset();
-        setLoading(true);
+      reset();
+      setLoading(true);
 
-        try {
-            const historyList: HistoryInfo[] = await getHistoryDay(date);
-            setResults(historyList.length);
-            if (historyList && historyList.length > 0) {
-                historyList.forEach(item => {
-                    const foodData = item.foods; 
-                    if (item.foodType === 1) {
-                        setBreakfast(foodData);
-                    } else if (item.foodType === 2) {
-                        setLunch(foodData);
-                    } else if (item.foodType === 3) {
-                        setDinner(foodData);
-                    }
-                });
+      try {
+        const historyList: HistoryInfo[] = await getHistoryDay(date);
+        setResults(historyList.length);
+        if (historyList && historyList.length > 0) {
+          historyList.forEach(item => {
+            const foodData = item.foods;
+            if (item.foodType === 1) {
+              setBreakfast(foodData);
+            } else if (item.foodType === 2) {
+              setLunch(foodData);
+            } else if (item.foodType === 3) {
+              setDinner(foodData);
             }
-        } catch (error) {
-            console.error("Error al obtener el historial:", error);
-            reset();
-        } finally {
-          setRefresh(false);
-          setLoading(false);
+          });
         }
+      } catch (error) {
+        console.error('Error al obtener el historial:', error);
+        reset();
+      } finally {
+        setRefresh(false);
+        setLoading(false);
+      }
     };
-    fetchHistory()
+    fetchHistory();
   }, [date, refresh]);
   const styles = StyleSheet.create({
+    container: {
+      flex: 1,
+      backgroundColor: theme.colors.background,
+    },
     dateText: {
       borderColor: theme.colors.primary,
       borderWidth: 1,
       paddingHorizontal: width * 0.04,
       paddingVertical: height * 0.007,
       borderRadius: 5,
-      marginRight : width * 0.04,
+      marginRight: width * 0.04,
       marginTop: height * 0.01,
       fontWeight: 'bold',
     },
@@ -90,7 +94,7 @@ export const HistoryScreen = () => {
   });
 
   return (
-    <View>
+    <View style={styles.container}>
       <View
         style={{
           paddingHorizontal: width * 0.05,
@@ -126,33 +130,28 @@ export const HistoryScreen = () => {
           Seleccionar una fecha
         </Button>
       </View>
-      <View>
-        {loading ? (
-          <ActivityIndicator
-            animating={true}
-            color={theme.colors.primary}
-            size={'large'}
-            style={styles.activityIndicator}
-          />
-        ) : (
-          <>
-            {results > 0 ? (
-              <HistoryDay
-                breakfast={breakfast}
-                lunch={lunch}
-                dinner={dinner}
-                refresh={refresh}
-                setRefresh={setRefresh}
-              />
-            ) : (
-              <NoHistoryComponent 
-                refresh={refresh}
-                setRefresh={setRefresh}
-              />
-            )}
-          </>
-        )}
-      </View>
+      {loading ? (
+        <ActivityIndicator
+          animating={true}
+          color={theme.colors.primary}
+          size={'large'}
+          style={styles.activityIndicator}
+        />
+      ) : (
+        <>
+          {results > 0 ? (
+            <HistoryDay
+              breakfast={breakfast}
+              lunch={lunch}
+              dinner={dinner}
+              refresh={refresh}
+              setRefresh={setRefresh}
+            />
+          ) : (
+            <NoHistoryComponent refresh={refresh} setRefresh={setRefresh} />
+          )}
+        </>
+      )}
     </View>
   );
 };
